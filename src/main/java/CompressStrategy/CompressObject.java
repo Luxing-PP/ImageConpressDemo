@@ -1,3 +1,5 @@
+package CompressStrategy;
+
 import java.io.File;
 
 public class CompressObject {
