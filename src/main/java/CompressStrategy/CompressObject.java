@@ -8,6 +8,8 @@ public class CompressObject {
     public float scale = (float) 1.0;
     public String name=null;
 
+    public CompressObject(){}
+
     public CompressObject(BufferedImage bufferedImage, float scale , String name){
         this.bufferedImage = bufferedImage;
         this.scale = scale;

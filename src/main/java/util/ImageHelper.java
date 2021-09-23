@@ -1,6 +1,7 @@
 package util;
 
 import CompressStrategy.CompressObject;
+import CompressStrategy.EggCompressObject;
 import org.apache.commons.imaging.ImageReadException;
 
 import javax.imageio.IIOException;
@@ -18,6 +19,11 @@ public class ImageHelper {
     //记得同时修改两个Loader
     public static List<CompressObject> ImageLoad(List<File> imgList){
         return imgList.stream().map(r->{
+            if(r.isDirectory()){
+                //文件夹特判
+                return new EggCompressObject();
+            }
+
             BufferedImage sourceImg = null;
             try {
                 //RGB
@@ -44,6 +50,11 @@ public class ImageHelper {
 
     public static List<CompressObject> ImageLoadWithScale(List<File> imgList,final int limit_height,final int limit_width){
         List<CompressObject> toConductList = imgList.stream().map(r->{
+            if(r.isDirectory()){
+                //文件夹特判
+                return new EggCompressObject();
+            }
+
             float scale=1;
             BufferedImage sourceImg = null;
 
