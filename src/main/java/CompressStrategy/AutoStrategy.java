@@ -2,7 +2,11 @@ package CompressStrategy;
 
 import net.coobird.thumbnailator.Thumbnails;
 import net.coobird.thumbnailator.name.Rename;
+import org.apache.commons.imaging.ImageReadException;
+import util.ImageHelper;
+import util.JpegReader;
 
+import javax.imageio.IIOException;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
@@ -15,7 +19,6 @@ import java.util.stream.Collectors;
 
 public class AutoStrategy implements CompressStrategy {
     String folderPath=null;
-    Rename RENAME_STRATEGY = null;
 
     int limit_X = 0;
     int limit_Y = 0;
@@ -31,57 +34,30 @@ public class AutoStrategy implements CompressStrategy {
 
         System.out.println("请输入图片最大宽度（单位px）：");
         limit_Y = Integer.parseInt(bf.readLine());
-
-        System.out.println("是否覆盖原文件? T/F");
-
-        //有个可能BUG 但是不想修就是输不是T的 == F
-        RENAME_STRATEGY = (bf.readLine().equals("T"))? Rename.NO_CHANGE : Rename.PREFIX_DOT_THUMBNAIL;
     }
 
     @Override
     public void Compress() throws IOException {
-        //tip asList
         List<File> imgList = Arrays.asList(new File(folderPath).listFiles());
 
         final int limit_height = limit_Y;
         final int limit_width = limit_X;
 
-        List<CompressObject> toConductList = imgList.stream().map(r->{
-            float scale=1;
+        List<CompressObject> toConductList = ImageHelper.ImageLoadWithScale(imgList,limit_height,limit_width);
 
-            //计算能够过限制的最大scale
-            try {
-                BufferedImage sourceImg = ImageIO.read(new FileInputStream(r));
-                int imgH = sourceImg.getHeight();
-                int imgW = sourceImg.getWidth();
-
-                if(imgH>limit_height && imgW>limit_width){
-                    float scaleA = limit_height / (float)imgH;
-                    float scaleB = limit_width  / (float)imgW;
-
-                    scale = Math.min(scaleA,scaleB);
-                }else if(imgH>limit_height){
-                    scale = limit_height / (float)imgH;
-                }else if(imgW>limit_width){
-                    scale = limit_width  / (float)imgW;
-                }else {
-                    scale = (float) 1.0;
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            return new CompressObject(r,scale);
-        }).collect(Collectors.toList());
-
+        //创建成品文件夹
+        File dir = new File(folderPath+"\\Resize");
+        if(!dir.isDirectory()){
+            dir.mkdir();
+        }
 
         //压缩
         for (CompressObject srcImg : toConductList){
-            System.out.println("开始压缩:"+srcImg.imgFile.getName());
-            Thumbnails.of(srcImg.imgFile)
+            System.out.println("开始压缩:"+srcImg.name);
+            Thumbnails.of(srcImg.bufferedImage)
                     .scale(srcImg.scale)
                     .outputFormat("jpg")
-                    .toFiles(RENAME_STRATEGY);
+                    .toFile(dir.getAbsolutePath()+"\\"+srcImg.name);
             System.out.println("压缩完毕，压缩比:"+srcImg.scale);
         }
     }

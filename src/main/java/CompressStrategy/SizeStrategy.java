@@ -2,14 +2,16 @@ package CompressStrategy;
 
 import net.coobird.thumbnailator.Thumbnails;
 import net.coobird.thumbnailator.name.Rename;
+import util.ImageHelper;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 public class SizeStrategy implements CompressStrategy {
     String folderPath=null;
-    Rename RENAME_STRATEGY = null;
 
     int target_X = 0;
     int target_Y = 0;
@@ -25,20 +27,26 @@ public class SizeStrategy implements CompressStrategy {
 
         System.out.println("请输入图片目标宽度（单位px）：");
         target_Y = Integer.parseInt(bf.readLine());
-
-        System.out.println("是否覆盖原文件? T/F");
-        //有个可能BUG 但是不想修就是输不是T的 == F
-        RENAME_STRATEGY = (bf.readLine().equals("T"))? Rename.NO_CHANGE : Rename.PREFIX_DOT_THUMBNAIL;
     }
 
     @Override
     public void Compress() throws IOException {
         //tip 卧槽居然默认就是保比例的
-        System.out.println("批量压缩中");
-        Thumbnails.of(new File(folderPath).listFiles())
-                .size(target_X,target_Y)
-                .keepAspectRatio(false)
-                .outputFormat("jpg")
-                .toFiles(RENAME_STRATEGY);
+        List<CompressObject> toConductList = ImageHelper.ImageLoad(Arrays.asList(new File(folderPath).listFiles()));
+
+        //创建成品文件夹
+        File dir = new File(folderPath+"\\Resize");
+        if(!dir.isDirectory()){
+            dir.mkdir();
+        }
+
+        for (CompressObject srcImg : toConductList){
+            System.out.println("开始压缩:"+srcImg.name);
+            Thumbnails.of(srcImg.bufferedImage)
+                    .size(target_X,target_Y)
+                    .keepAspectRatio(false)
+                    .outputFormat("jpg")
+                    .toFile(dir.getAbsolutePath()+"\\"+srcImg.name);
+        }
     }
 }

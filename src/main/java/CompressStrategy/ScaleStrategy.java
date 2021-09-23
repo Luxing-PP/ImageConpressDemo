@@ -2,14 +2,17 @@ package CompressStrategy;
 
 import net.coobird.thumbnailator.Thumbnails;
 import net.coobird.thumbnailator.name.Rename;
+import util.ImageHelper;
+import util.JpegReader;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 public class ScaleStrategy implements CompressStrategy {
     String folderPath=null;
-    Rename RENAME_STRATEGY = null;
     double scale = 1.0;
 
     @Override
@@ -21,18 +24,24 @@ public class ScaleStrategy implements CompressStrategy {
         System.out.println("请输入缩放的比例（单位%）：");
         int scalePercent = Integer.parseInt(bf.readLine());
         scale =  scalePercent / 100.0;
-
-        System.out.println("是否覆盖原文件? T/F");
-        //有个可能BUG 但是不想修就是输不是T的 == F
-        RENAME_STRATEGY = (bf.readLine().equals("T"))? Rename.NO_CHANGE : Rename.PREFIX_DOT_THUMBNAIL;
     }
 
     @Override
     public void Compress() throws IOException {
-        System.out.println("批量压缩中");
-        Thumbnails.of(new File(folderPath).listFiles())
-                .scale(scale)
-                .outputFormat("jpg")
-                .toFiles(RENAME_STRATEGY);
+        List<CompressObject> toConductList = ImageHelper.ImageLoad(Arrays.asList(new File(folderPath).listFiles()));
+
+        //创建成品文件夹
+        File dir = new File(folderPath+"\\Resize");
+        if(!dir.isDirectory()){
+            dir.mkdir();
+        }
+
+        for (CompressObject srcImg : toConductList){
+            System.out.println("开始压缩:"+srcImg.name);
+            Thumbnails.of(srcImg.bufferedImage)
+                    .scale(scale)
+                    .outputFormat("jpg")
+                    .toFile(dir.getAbsolutePath()+"\\"+srcImg.name);
+        }
     }
 }
