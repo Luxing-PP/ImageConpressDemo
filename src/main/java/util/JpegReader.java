@@ -19,8 +19,9 @@ import org.apache.commons.imaging.common.bytesource.ByteSource;
 import org.apache.commons.imaging.common.bytesource.ByteSourceFile;
 import org.apache.commons.imaging.formats.jpeg.JpegImageParser;
 import org.apache.commons.imaging.formats.jpeg.segments.App14Segment;
-import org.apache.commons.imaging.formats.jpeg.segments.UnknownSegment;
 
+
+//网上抄的（呆）
 public class JpegReader {
     public static final int COLOR_TYPE_RGB = 1;
 
