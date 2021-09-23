@@ -11,7 +11,7 @@ public class EggCompressObject extends CompressObject {
 
     public EggCompressObject() {
         super();
-        this.name = "怎么有人在图片文件夹里放文件夹啊~_"+count;
+        this.name = "怎么有人在图片文件夹里放文件夹啊~~~__"+count;
         try {
             this.bufferedImage = ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("egg.jpg"));
         } catch (IOException e) {
