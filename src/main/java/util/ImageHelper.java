@@ -14,6 +14,8 @@ import java.util.stream.Collectors;
 
 public class ImageHelper {
 
+    //tip 这个民间twelveMonkey 的插件好神秘啊0 0
+    //记得同时修改两个Loader
     public static List<CompressObject> ImageLoad(List<File> imgList){
         return imgList.stream().map(r->{
             BufferedImage sourceImg = null;
