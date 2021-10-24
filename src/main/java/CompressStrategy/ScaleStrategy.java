@@ -1,9 +1,8 @@
 package CompressStrategy;
 
+import CompressObject.CompressObject;
 import net.coobird.thumbnailator.Thumbnails;
-import net.coobird.thumbnailator.name.Rename;
 import util.ImageHelper;
-import util.JpegReader;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -16,7 +15,7 @@ public class ScaleStrategy implements CompressStrategy {
     double scale = 1.0;
 
     @Override
-    public void Input(BufferedReader bf) throws IOException {
+    public void ResolvePara(BufferedReader bf) throws IOException {
         System.out.println("请输入压缩图片存放的文件夹路径(最好是都要修改的)：");
         folderPath = bf.readLine();
         folderPath = folderPath.replaceAll("\\\\" , "\\\\\\\\");

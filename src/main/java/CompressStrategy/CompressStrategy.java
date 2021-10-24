@@ -6,6 +6,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 
 public interface CompressStrategy {
-    void Input(BufferedReader bf) throws IOException;
+    void ResolvePara(BufferedReader bf) throws IOException;
     void Compress() throws IOException;
 }

@@ -1,6 +1,5 @@
 package util;
 
-
 import javax.imageio.*;
 import javax.imageio.stream.ImageInputStream;
 import java.awt.color.ColorSpace;
@@ -21,7 +20,7 @@ import org.apache.commons.imaging.formats.jpeg.JpegImageParser;
 import org.apache.commons.imaging.formats.jpeg.segments.App14Segment;
 
 
-//网上抄的（呆）
+//tip 该部分源自网络资源
 public class JpegReader {
     public static final int COLOR_TYPE_RGB = 1;
 
@@ -85,9 +84,7 @@ public class JpegReader {
 
     public void checkAdobeMarker(File file) throws IOException, ImageReadException {
         JpegImageParser parser = new JpegImageParser();
-
         ByteSource byteSource = new ByteSourceFile(file);
-
         @SuppressWarnings("rawtypes")
 
         ArrayList segments = (ArrayList) parser.readSegments(byteSource, new int[] { 0xffee }, true);

@@ -1,7 +1,6 @@
 package util;
 
-import CompressStrategy.CompressObject;
-import CompressStrategy.EggCompressObject;
+import CompressObject.*;
 import org.apache.commons.imaging.ImageReadException;
 
 import javax.imageio.IIOException;
@@ -14,67 +13,24 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ImageHelper {
-
-    //tip 这个民间twelveMonkey 的插件好神秘啊0 0
-    //记得同时修改两个Loader
     public static List<CompressObject> ImageLoad(List<File> imgList){
         return imgList.stream().map(r->{
             if(r.isDirectory()){
                 //文件夹特判
                 return new EggCompressObject();
             }
-
-            BufferedImage sourceImg = null;
-            try {
-                //RGB
-                System.out.println("正在读取图片"+r.getName());
-                sourceImg = ImageIO.read(new FileInputStream(r));
-            }catch (IIOException ccMKException){
-                //CCMK
-                System.out.println("该文件为CCMK架构JPEG，转换后可能有色差自行决断："+r.getName());
-
-                try {
-                    sourceImg = new JpegReader().readImage(r);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (ImageReadException e) {
-                    e.printStackTrace();
-                }
-            }
-            catch (IOException e) {
-                e.printStackTrace();
-            }
+            BufferedImage sourceImg = readImageFromFile(r);
             return new CompressObject(sourceImg,r.getName());
         }).collect(Collectors.toList());
     }
-
     public static List<CompressObject> ImageLoadWithScale(List<File> imgList,final int limit_height,final int limit_width){
         List<CompressObject> toConductList = imgList.stream().map(r->{
             if(r.isDirectory()){
                 //文件夹特判
                 return new EggCompressObject();
             }
-
             float scale=1;
-            BufferedImage sourceImg = null;
-
-            try {
-                System.out.println("正在读取图片"+r.getName());
-                sourceImg = ImageIO.read(new FileInputStream(r));
-            }catch (IIOException ccMKException){
-                System.out.println("该文件为CCMK架构，转换后可能有色差："+r.getName());
-
-                try {
-                    sourceImg = new JpegReader().readImage(r);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (ImageReadException e) {
-                    e.printStackTrace();
-                }
-            }
-            catch (IOException e) {
-                e.printStackTrace();
-            }
+            BufferedImage sourceImg = readImageFromFile(r);
 
             //计算能够过限制的最大scale
             int imgH = sourceImg.getHeight();
@@ -97,5 +53,26 @@ public class ImageHelper {
         }).collect(Collectors.toList());
 
         return toConductList;
+    }
+    private static BufferedImage readImageFromFile(File r){
+        BufferedImage sourceImg = null;
+        try {
+            System.out.println("正在读取图片"+r.getName());
+            sourceImg = ImageIO.read(new FileInputStream(r));
+        }catch (IIOException ccMKException){
+            System.out.println("该文件为CCMK架构，转换后可能有色差："+r.getName());
+
+            try {
+                sourceImg = new JpegReader().readImage(r);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ImageReadException e) {
+                e.printStackTrace();
+            }
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        return sourceImg;
     }
 }

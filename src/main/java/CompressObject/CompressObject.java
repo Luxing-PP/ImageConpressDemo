@@ -1,4 +1,4 @@
-package CompressStrategy;
+package CompressObject;
 
 import java.awt.image.BufferedImage;
 

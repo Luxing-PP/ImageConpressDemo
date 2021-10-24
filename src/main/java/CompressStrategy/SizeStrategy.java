@@ -1,7 +1,7 @@
 package CompressStrategy;
 
+import CompressObject.CompressObject;
 import net.coobird.thumbnailator.Thumbnails;
-import net.coobird.thumbnailator.name.Rename;
 import util.ImageHelper;
 
 import java.io.BufferedReader;
@@ -17,7 +17,7 @@ public class SizeStrategy implements CompressStrategy {
     int target_Y = 0;
 
     @Override
-    public void Input(BufferedReader bf) throws IOException {
+    public void ResolvePara(BufferedReader bf) throws IOException {
         System.out.println("请输入压缩图片存放的文件夹路径(最好是都要修改的)：");
         folderPath = bf.readLine();
         folderPath = folderPath.replaceAll("\\\\" , "\\\\\\\\");
@@ -31,7 +31,6 @@ public class SizeStrategy implements CompressStrategy {
 
     @Override
     public void Compress() throws IOException {
-        //tip 卧槽居然默认就是保比例的
         List<CompressObject> toConductList = ImageHelper.ImageLoad(Arrays.asList(new File(folderPath).listFiles()));
 
         //创建成品文件夹

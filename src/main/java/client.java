@@ -1,14 +1,7 @@
 import CompressStrategy.*;
-import net.coobird.thumbnailator.Thumbnails;
-
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.*;
-import java.util.*;
-import java.util.stream.Collectors;
 
-//tip 优化 IMAGEIO 那里其实读取了两遍，但Thumb没有读取像素的功能我也表示很绝望
-//有空可以改成ENUM
+
 public class client {
     public final static int MODE_SCALE = 1;
     public final static int MODE_SIZE = 2;
@@ -25,8 +18,8 @@ public class client {
         try{
             System.out.println("请选择模式: \n" +
                     "1 (批量比例缩放)\n" +
-                    "2 (强制缩放到指定长X宽，也就是不等比)\n" +
-                    "3 (自动化等比缩放（旧版))");
+                    "2 (批量强制缩放)\n" +
+                    "3 (批量适应缩放（旧版))");
             MODE = Integer.parseInt(bf.readLine());
 
             //MODE规范性检测
@@ -45,7 +38,7 @@ public class client {
                     compressStrategy = new SizeStrategy();
                     break;
                 case MODE_AUTO:
-                    compressStrategy = new AutoStrategy();
+                    compressStrategy = new AutoFixStrategy();
                     break;
                 default:
                     System.out.println("不存在属于该编号的模式："+ MODE);
@@ -54,10 +47,10 @@ public class client {
                     return;
             }
 
-            //输入
-            compressStrategy.Input(bf);
+            //设定参数
+            compressStrategy.ResolvePara(bf);
 
-            //压缩
+            //执行压缩
             compressStrategy.Compress();
 
         }catch (IOException ioe){
@@ -68,11 +61,7 @@ public class client {
             System.out.println("程序执行错误，问题不明");
         }
 
-        //C:\Users\ASUS\Desktop\测试文件夹\007.jpg
-
-
         System.out.println("运行完毕，按任意键结束程序");
-        //任意读入一个东西
         try { bf.readLine(); }catch (Exception e){ e.printStackTrace(); }
     }
 }

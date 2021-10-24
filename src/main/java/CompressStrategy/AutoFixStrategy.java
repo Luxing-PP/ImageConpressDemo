@@ -1,30 +1,23 @@
 package CompressStrategy;
 
+import CompressObject.CompressObject;
 import net.coobird.thumbnailator.Thumbnails;
-import net.coobird.thumbnailator.name.Rename;
-import org.apache.commons.imaging.ImageReadException;
 import util.ImageHelper;
-import util.JpegReader;
-
-import javax.imageio.IIOException;
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
-public class AutoStrategy implements CompressStrategy {
+
+public class AutoFixStrategy implements CompressStrategy {
     String folderPath=null;
 
     int limit_X = 0;
     int limit_Y = 0;
 
     @Override
-    public void Input(BufferedReader bf) throws IOException {
+    public void ResolvePara(BufferedReader bf) throws IOException {
         System.out.println("请输入压缩图片存放的文件夹路径(最好是都要修改的)：");
         folderPath = bf.readLine();
         folderPath = folderPath.replaceAll("\\\\" , "\\\\\\\\");
