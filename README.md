@@ -8,3 +8,8 @@
 
 # 使用
 cmd java --jar 执行jar包即可
+
+# 快速启动
+java -Dfile.encoding=utf-8 -jar .\CompressDemo.jar 4 .\
+
+将会以多线程模式在当前目录压缩
