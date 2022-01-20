@@ -13,6 +13,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ImageHelper {
+    public static CompressObject ImageLoad(File imgFile){
+        if(imgFile.isDirectory()){
+            return new EggCompressObject();
+        }
+        System.out.println("正在读取图片："+imgFile.getName());
+        BufferedImage sourceImg = readImageFromFile(imgFile);
+        return new CompressObject(sourceImg,imgFile.getName());
+    }
+
     public static List<CompressObject> ImageLoad(List<File> imgList){
         return imgList.stream().map(r->{
             if(r.isDirectory()){

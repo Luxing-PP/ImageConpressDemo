@@ -20,4 +20,5 @@ public class CompressObject {
         this.bufferedImage = bufferedImage;
         this.name = name;
     }
+
 }
